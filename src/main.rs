@@ -15,14 +15,12 @@ async fn main() {
             server::main().await.unwrap();
         } else if mode == "--client" {
             // Run client example
-            let mut counter = 1;
 
             let callback = |client: &mut Client| {
-                client.watch_room("1234000000004321");
-
                 let room = "1234000000004321";
                 let post = "01020304";
 
+                client.watch_room(room);
                 client.send_post(room, post, None)
             };
 
@@ -31,7 +29,6 @@ async fn main() {
                 Box::new(move |post, posts| {
                     println!("{:?}", post);
                     println!("{}", posts.len());
-                    counter += 1;
                 }),
                 Box::new(callback),
             )
