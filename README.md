@@ -15,7 +15,7 @@ The client example code is in `src/main.rs`:
 ```rust
 let callback = |client: &mut Client| {
     let room = "1234000000004321";
-    let room = "1234000000004321";
+    let post = "01020304";
 
     client.watch_room(room);
     client.send_post(room, post, None)
