@@ -1,10 +1,8 @@
 use std::str;
 use std::{
-    fmt::{Error, Write as FmtWrite},
+    fmt::Write as FmtWrite,
     num::ParseIntError,
-    str::Utf8Error,
-    thread,
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{SystemTime, UNIX_EPOCH},
 };
 
 pub const WATCH: u8 = 0;
@@ -15,6 +13,10 @@ pub const TIME: u8 = 4;
 
 type Hex = String;
 type Bytes = Vec<u8>;
+
+const HEX_CHARS: [char; 16] = [
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+];
 
 fn hex_to_bytes(hex: &str) -> Result<Bytes, ParseIntError> {
     (0..hex.len())
@@ -40,24 +42,24 @@ pub fn hexs_to_bytes(arr: &[Hex]) -> Result<Bytes, ParseIntError> {
 }
 
 pub fn u8_to_hex(num: u8) -> Hex {
-    num_to_hex(num.into())
+    num_to_hex(8, num.into())
 }
 
 pub fn u32_to_hex(num: u32) -> Hex {
-    num_to_hex(num.into())
+    num_to_hex(32, num.into())
 }
 
 pub fn u64_to_hex(num: u64) -> Hex {
-    num_to_hex(num)
+    num_to_hex(64, num)
 }
 
-fn num_to_hex(num: u64) -> Hex {
-    let res = format!("{:02x}", num);
-    if res.len() % 2 == 0 {
-        res
-    } else {
-        format!("0{}", res)
+fn num_to_hex(n: u64, num: u64) -> Hex {
+    let mut res = String::new();
+    for i in 0..(n / 4) {
+        let hex_idx = (num / (2_u64.pow((((n as u64) / 4_u64 - i - 1_u64) * 4_u64) as u32))) & 0xF;
+        res = format!("{}{}", res, HEX_CHARS[hex_idx as usize]);
     }
+    res
 }
 
 fn hex_to_u8(num: &Hex) -> Result<u8, ParseIntError> {

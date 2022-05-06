@@ -9,6 +9,7 @@ edition = "2021"
 tokio-tungstenite = "*"
 futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 tokio = { version = "1.0.0", features = ["full"]}
+tokio-stream = "0.1.8"
 futures-channel = "0.3"
 url = "2.0.0"
 
